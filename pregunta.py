@@ -10,36 +10,19 @@ espacio entre palabra y palabra.
 
 """
 import pandas as pd
-import re
-
 
 def ingest_data():
 
-    contador = 0
+    import re
+
+    cont = 0
     dictionary = {}
-    dataframe = pd.DataFrame()
-
-    with open('clusters_report.txt') as clustersreport:
-        rows = clustersreport.readlines()
-    rows = rows[4:]
-    clusters = []
-    cluster = [0, 0, 0, '']
-    lastCluster = 1
-    lastPClave = 105
-    lastPorcentaje = "15,9 %"
-    for i, _ in df.iterrows():
-        if df.iloc[i,0] != lastCluster and not pd.isna(df.iloc[i,0]):
-            lastCluster = df.iloc[i,0]
-            lastPClave = df.iloc[i,1]
-            lastPorcentaje = df.iloc[i,2]
-        else:
-            df.iloc[i,0] = lastCluster
-            df.iloc[i,1] = lastPClave
-            df.iloc[i,2] = lastPorcentaje
-
-        for line in clustersreport:
+    df = pd.DataFrame()
+    
+    with open('./clusters_report.txt') as data:
+        for line in data:
             line = re.sub(r"\s+", " ", line)
-            if len(line)>1 and contador > 3:
+            if len(line)>1 and cont > 3:
                 if line.split()[0].isnumeric() == True:
                     try: 
                         dictionary['principales_palabras_clave'] = ' '.join(dictionary['principales_palabras_clave'])
@@ -52,11 +35,10 @@ def ingest_data():
                 else: 
                     dictionary['principales_palabras_clave'].append(' '.join(line.split()))
                     
-            contador += 1
+            cont += 1
             
     dictionary['principales_palabras_clave'] = ' '.join(dictionary['principales_palabras_clave'])
     df = df.append(dictionary, ignore_index=True)
     df['principales_palabras_clave'] = df['principales_palabras_clave'].str.rstrip('\.')
     
-
     return df
